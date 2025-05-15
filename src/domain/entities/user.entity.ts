@@ -9,10 +9,18 @@ export class User {
     public readonly phone: string,
     public readonly name: string,
     public readonly role: RoleVO,
-    public readonly createdAt: Date,
+    private readonly firebaseUid: string,
+    private isVerified: boolean,
   ) {}
 
-  static create(id: string, phone: string, name: string, role: string): User {
+  static create(
+    id: string,
+    phone: string,
+    name: string,
+    role: string,
+    firebaseUid: string,
+    isVerified = false,
+  ): User {
     if (!phone) {
       throw new HttpExceptionError(
         MESSAGES.PHONE_REQUIRED,
@@ -27,7 +35,7 @@ export class User {
       );
     }
     const roleVo = RoleVO.create(role);
-    return new User(id, phone, name, roleVo, new Date());
+    return new User(id, phone, name, roleVo, firebaseUid, isVerified);
   }
 
   getId(): string {
@@ -46,7 +54,13 @@ export class User {
     return this.role;
   }
 
-  getCreatedAt(): Date {
-    return this.createdAt;
+  getFirebaseUid(): string {
+    return this.firebaseUid;
+  }
+  getIsVerified(): boolean {
+    return this.isVerified;
+  }
+  verify(): void {
+    this.isVerified = true;
   }
 }

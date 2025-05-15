@@ -40,6 +40,8 @@ model User {
   role       Role
   created_at DateTime @default(now())
   orders     Order[]
+  firebaseUid String? @unique
+  isVerified Boolean @default(false)
 }
 
 model Restaurant {

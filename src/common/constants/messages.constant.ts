@@ -10,4 +10,12 @@ export const MESSAGES = {
   COOKIES_UNAWAILABLE:
     'Cookies not available. Ensure cookie-parser is configured.',
   TOKEN_TYPE_MISMATCH: 'Token type does not match expected value',
+  FIREBASE_CONFIG_MISSING: 'Firebase configuration is missing or invalid',
+  PHONE_NOT_VERIFIED: 'Phone number not verified',
+  INVALID_VERIFICATION: 'Invalid phone verification',
+  SIGNUP_SESSION_EXPIRED: 'Signup session has expired. Please try again.',
+  PHONE_VERIFICATION_MISMATCH:
+    'Phone verification failed. The verified phone number does not match the registered one.',
+  FIREBASE_TOKEN_REQUIRED: 'Firebase ID token is required.',
+  TEMP_USER_ID_REQUIRED: 'Temporary user ID is required.',
 } as const;

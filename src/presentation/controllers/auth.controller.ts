@@ -13,19 +13,35 @@ import { SignupDto } from 'src/application/dtos/signup.dto';
 import { SignupUseCase } from 'src/application/useCases/auth/signup.useCase';
 import { HttpExceptionError } from 'src/common/errors/httpExceptionError';
 import { MESSAGES } from 'src/common/constants/messages.constant';
+import { VerifyPhoneDto } from 'src/application/dtos/verify-phone.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly signupUseCase: SignupUseCase) {}
 
-  @Post('signup')
-  @HttpCode(HttpStatus.CREATED)
+  @Post('signup/init')
+  @HttpCode(HttpStatus.OK)
   async signup(@Body() dto: SignupDto, @Res() res: Response) {
+    const { tempUserId } = await this.signupUseCase.initiateSignup({
+      phone: dto.phone,
+      name: dto.name,
+    });
+
+    return res.json({
+      success: true,
+      message: 'Signup initiated. Please verify your phone number.',
+      tempUserId,
+    });
+  }
+
+  @Post('signup/verify')
+  @HttpCode(HttpStatus.CREATED)
+  async verifyAndCompleteSignup(
+    @Body() dto: VerifyPhoneDto,
+    @Res() res: Response,
+  ) {
     const { user, accessToken, refreshToken } =
-      await this.signupUseCase.execute({
-        phone: dto.phone,
-        name: dto.name,
-      });
+      await this.signupUseCase.completeSignup(dto);
 
     const cookieOptions = {
       httpOnly: true,
@@ -49,11 +65,10 @@ export class AuthController {
         phone: user.getPhone(),
         name: user.getName(),
         role: user.getRole().getValue(),
-        created_at: user.getCreatedAt(),
+        isVerified: user.getIsVerified(),
       },
     });
   }
-
   @Get('profile')
   getProfil(@Req() req: Request) {
     if (!req.user) {

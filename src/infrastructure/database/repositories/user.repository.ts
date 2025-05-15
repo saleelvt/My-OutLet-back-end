@@ -18,7 +18,8 @@ export class UserRepository implements IUserRepository {
           phone: user.getPhone(),
           name: user.getName(),
           role: user.getRole().getValue(),
-          created_at: user.getCreatedAt(),
+          firebaseUid: user.getFirebaseUid(),
+          isVerified: user.getIsVerified(),
         },
       });
 
@@ -27,7 +28,8 @@ export class UserRepository implements IUserRepository {
         created.phone,
         created.name,
         RoleVO.create(created.role),
-        created.created_at,
+        created.firebaseUid || '',
+        created.isVerified,
       );
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -53,7 +55,25 @@ export class UserRepository implements IUserRepository {
       user.phone,
       user.name,
       RoleVO.create(user.role),
-      user.created_at,
+      user.firebaseUid || '',
+      user.isVerified,
+    );
+  }
+
+  async findUserById(id: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) return null;
+
+    return User.create(
+      user.id,
+      user.phone,
+      user.name,
+      user.role.toString(),
+      user.firebaseUid || '',
+      user.isVerified,
     );
   }
 }
