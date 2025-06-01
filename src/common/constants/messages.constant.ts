@@ -18,4 +18,5 @@ export const MESSAGES = {
     'Phone verification failed. The verified phone number does not match the registered one.',
   FIREBASE_TOKEN_REQUIRED: 'Firebase ID token is required.',
   TEMP_USER_ID_REQUIRED: 'Temporary user ID is required.',
+  CONTACT_INFO_REQUIRED: 'Either phone or email is required',
 } as const;

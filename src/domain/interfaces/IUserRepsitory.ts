@@ -4,4 +4,5 @@ export interface IUserRepository {
   createUser(user: User): Promise<User>;
   findUserByPhone(phone: string): Promise<User | null>;
   findUserById(id: string): Promise<User | null>;
+  // findUserByEmail(email: string): Promise<User | null>;
 }
